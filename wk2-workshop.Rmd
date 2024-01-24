@@ -2,7 +2,12 @@
 title: "week2 lecture git"
 author: "Wang Tingyu Kelly"
 date: "`r Sys.Date()`"
-output: github_document
+output:
+  github_document:
+    toc: true
+    toc_depth: 2
+    fig_width: 7
+    fig_height: 6
 ---
 
 ```{r setup, include=FALSE}
