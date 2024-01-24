@@ -14,22 +14,43 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Read in data
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+df = readRDS("data/wk2_stocks.rds")
+str(df)
 ```
 
-## Including Plots
+## Statistics on returns
 
-You can also embed plots, for example:
+```{r}
+sum(df$SPY_returns) * 100
+mean(df$SPY_returns) * 100
+sd(df$SPY_returns) * 100
+```
++ The cumulative returns of the S&P index during this period is `r round(sum(df$SPY_returns) * 100, 2)`%.
++ The average daily returns of the S&P index during this period is `r round(mean(df$SPY_returns) * 100, 2)`%.
++ The standard deviation of the daily returns of the S&P index during this period is `r round(sd(df$SPY_returns) * 100, 2)`%. 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+## S&P Prices
+
+```{r}
+library(tidyverse)
+ggplot(data = df, aes(x = date, y = SPY_prices)) +
+  geom_line()
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## S&P Yearly Returns
+
+```{r}
+df %>%
+  mutate(year = year(date)) %>%
+  filter(year != 2024) %>%
+  group_by(year) %>%
+  summarize(yr_return = sum(SPY_returns) * 100) %>%
+  ggplot(aes(x = year, y = yr_return)) +
+  geom_col()
+```
+
+
+
